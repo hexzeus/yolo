@@ -1,0 +1,19 @@
+{
+	"geolocation": {
+		"data": {
+			"city": "Buffalo",
+			"country": {
+				"code": "US",
+				"name": "United States"
+			},
+			"subdivision": {
+				"code": "NY",
+				"name": "New York"
+			},
+			"timezone": "America/New_York",
+			"latitude": 42.8856,
+			"longitude": -78.8736
+		},
+		"timestamp": 1722691582402
+	}
+}
