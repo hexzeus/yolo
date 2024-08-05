@@ -47,7 +47,7 @@
   ],
   "license": "0BSD",
   "scripts": {
-    "build": "node_modules/.bin/gatsby build",
+    "build": "gatsby build",
     "develop": "gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,css}\"",
     "start": "node server.js",
