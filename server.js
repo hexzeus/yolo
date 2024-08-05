@@ -29,7 +29,7 @@ app.use(helmet({
     contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-            "default-src": ["'self'"],
+            "default-src": ["'self'", 'https://yolo-8yva.onrender.com'],
             "script-src": ["'self'", "'unsafe-inline'", 'https://yolo-8yva.onrender.com'],
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             "img-src": ["'self'", "data:", 'https://yolo-8yva.onrender.com'],
