@@ -1,4 +1,4 @@
-import type { GatsbyConfig } from "gatsby"
+import type { GatsbyConfig } from "gatsby";
 
 const config: GatsbyConfig = {
   siteMetadata: {
@@ -32,14 +32,17 @@ const config: GatsbyConfig = {
       },
     },
     `gatsby-plugin-netlify`,
+    `gatsby-plugin-sass`,  // Add this line for Sass
     {
-      resolve: "@chakra-ui/gatsby-plugin",
+      resolve: `gatsby-plugin-google-fonts`,
       options: {
-        resetCSS: true,
-        isUsingColorMode: true,
+        fonts: [
+          `orbitron\:400,700`, // You can specify different font weights here
+        ],
+        display: 'swap',
       },
     },
   ],
 }
 
-export default config
+export default config;

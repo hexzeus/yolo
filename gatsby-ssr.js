@@ -32,17 +32,17 @@ export const onPreRenderHTML = ({ getHeadComponents, replaceHeadComponents }) =>
 
   const fontPreloadLinks = [
     <link
-      key="preload-inter"
+      key="preload-orbitron"
       rel="preload"
-      href="/fonts/inter-var-latin.woff2"
+      href="/fonts/orbitron-var-latin.woff2"
       as="font"
       type="font/woff2"
       crossOrigin="anonymous"
     />,
     <link
-      key="preload-poppins"
+      key="preload-roboto-mono"
       rel="preload"
-      href="/fonts/poppins-var-latin.woff2"
+      href="/fonts/roboto-mono-var-latin.woff2"
       as="font"
       type="font/woff2"
       crossOrigin="anonymous"
