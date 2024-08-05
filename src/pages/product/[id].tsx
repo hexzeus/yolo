@@ -55,7 +55,7 @@ const ProductPage = ({ params, location }: PageProps<{}, {}, { product: Product 
         if (product) return;
         setIsLoading(true);
         try {
-            const response = await axios.get('http://localhost:3000/api/products', { timeout: 5000 });
+            const response = await axios.get('https://yolo-8yva.onrender.com/api/products', { timeout: 5000 });
             if (response.data && Array.isArray(response.data.result)) {
                 const foundProduct = response.data.result.find((p: Product) => p.id === params.id);
                 if (foundProduct) {

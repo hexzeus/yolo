@@ -7,8 +7,10 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+const renderUrl = 'https://yolo-8yva.onrender.com/';
+
 app.use(cors({
-    origin: 'http://localhost:8000' // Gatsby's default development port
+    origin: renderUrl
 }));
 
 // Set Content Security Policy
@@ -17,11 +19,11 @@ app.use(helmet({
         useDefaults: true,
         directives: {
             "default-src": ["'self'"],
-            "script-src": ["'self'", "'unsafe-inline'", "http://localhost:3000"],
+            "script-src": ["'self'", "'unsafe-inline'", renderUrl],
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-            "img-src": ["'self'", "data:", "http://localhost:3000"],
+            "img-src": ["'self'", "data:", renderUrl],
             "font-src": ["'self'", "https://fonts.gstatic.com"],
-            "connect-src": ["'self'", "https://api.printful.com"],
+            "connect-src": ["'self'", "https://api.printful.com", renderUrl],
             "object-src": ["'none'"],
             "upgrade-insecure-requests": []
         }
