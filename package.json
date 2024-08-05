@@ -49,14 +49,14 @@
   "license": "0BSD",
   "scripts": {
     "clean": "rimraf .cache public",
-    "build": "npx gatsby build",
+    "build": "yarn clean && yarn gatsby build",
     "develop": "gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,css}\"",
     "start": "node server.js",
     "serve": "gatsby serve",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
     "netlify:dev": "netlify dev",
-    "deploy": "npm run clean && npx gatsby build --prefix-paths && gh-pages -d public",
+    "deploy": "yarn clean && yarn gatsby build --prefix-paths && gh-pages -d public",
     "type-check": "tsc --noEmit",
     "dev": "nodemon server.js"
   },
