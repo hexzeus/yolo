@@ -17,7 +17,7 @@ const config: GatsbyConfig = {
         path: `${__dirname}/src/images`,
       },
     },
-    `gatsby-transformer-sharp`,
+    `gatsby-transformer-sharp`, // Corrected plugin name
     `gatsby-plugin-sharp`,
     {
       resolve: `gatsby-plugin-manifest`,
@@ -41,6 +41,7 @@ const config: GatsbyConfig = {
         display: 'swap',
       },
     },
+    `gatsby-plugin-postcss`, // Add this line for Tailwind CSS
   ],
 }
 

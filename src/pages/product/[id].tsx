@@ -1,30 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link as GatsbyLink, PageProps } from "gatsby";
 import axios from "axios";
-import {
-    Box,
-    Container,
-    Flex,
-    Image,
-    Heading,
-    Text,
-    Button,
-    VStack,
-    HStack,
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper,
-    NumberIncrementStepper,
-    NumberDecrementStepper,
-    useToast,
-    Spinner,
-    Link,
-    Badge,
-    Divider,
-    useColorModeValue,
-    useColorMode,
-} from "@chakra-ui/react";
-import { ArrowBackIcon, StarIcon } from '@chakra-ui/icons';
 
 interface Product {
     id: string;
@@ -41,14 +17,6 @@ const ProductPage = ({ params, location }: PageProps<{}, {}, { product: Product 
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(!location.state?.product);
     const [quantity, setQuantity] = useState(1);
-    const toast = useToast();
-    const { colorMode } = useColorMode();
-
-    const bgColor = useColorModeValue("lightBg", "darkBg");
-    const cardBgColor = useColorModeValue("white", "gray.700");
-    const textColor = useColorModeValue("lightText", "darkText");
-    const borderColor = useColorModeValue("gray.200", "gray.600");
-    const accentColor = useColorModeValue("lightAccent", "darkAccent");
 
     const fetchProduct = useCallback(async () => {
         if (product) return;
@@ -78,93 +46,82 @@ const ProductPage = ({ params, location }: PageProps<{}, {}, { product: Product 
     }, [fetchProduct]);
 
     const handleAddToCart = () => {
-        toast({
-            title: "Added to cart",
-            description: `Added ${quantity} ${product?.name} to cart`,
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-        });
+        alert(`Added ${quantity} ${product?.name} to cart`);
     };
 
     if (isLoading) return (
-        <Box bg={bgColor} minH="100vh" display="flex" alignItems="center" justifyContent="center">
-            <Spinner size="xl" color={accentColor} thickness="4px" />
-        </Box>
+        <div className="flex items-center justify-center min-h-screen bg-matrix-bg text-matrix-text">
+            <div className="glitch text-4xl" data-text="Decrypting...">Decrypting...</div>
+        </div>
     );
+
     if (error) return (
-        <Box bg={bgColor} minH="100vh" display="flex" alignItems="center" justifyContent="center">
-            <VStack spacing={4}>
-                <Text color="red.500" fontSize="xl">{error}</Text>
-                <Button onClick={fetchProduct} colorScheme={colorMode === "dark" ? "blue" : "brand"}>Retry</Button>
-            </VStack>
-        </Box>
+        <div className="flex items-center justify-center min-h-screen bg-matrix-bg text-matrix-text">
+            <div className="text-matrix-glow text-2xl glitch" data-text={error}>{error}</div>
+        </div>
     );
+
     if (!product) return (
-        <Box bg={bgColor} minH="100vh" display="flex" alignItems="center" justifyContent="center">
-            <Text fontSize="xl" color={textColor}>Product not found</Text>
-        </Box>
+        <div className="flex items-center justify-center min-h-screen bg-matrix-bg text-matrix-text">
+            <div className="text-2xl glitch" data-text="Product not found">Product not found</div>
+        </div>
     );
 
     return (
-        <Box bg={bgColor} minH="100vh" py={8} transition="background-color 0.2s">
-            <Container maxW="container.xl">
-                <Link as={GatsbyLink} to="/" mb={6} display="inline-flex" alignItems="center" color={accentColor}>
-                    <ArrowBackIcon mr={2} /> Back to Products
-                </Link>
-                <Flex direction={{ base: "column", md: "row" }} gap={8}>
-                    <Box flex={1}>
-                        <Image
-                            src={product.thumbnail_url}
-                            alt={product.name}
-                            objectFit="cover"
-                            w="100%"
-                            maxH="500px"
-                            borderRadius="lg"
-                            boxShadow="xl"
-                        />
-                    </Box>
-                    <VStack align="start" spacing={4} flex={1}>
-                        <Heading as="h1" size="2xl" color={textColor}>{product.name}</Heading>
-                        <HStack>
-                            <Badge colorScheme={colorMode === "dark" ? "teal" : "green"} fontSize="lg" px={2} py={1}>
+        <div className="matrix-container min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-matrix-bg text-matrix-text">
+            <div className="matrix-rain"></div>
+            <div className="container mx-auto relative z-10">
+                <GatsbyLink to="/" className="inline-flex items-center mb-6 text-matrix-accent no-underline hover:text-matrix-glow transition-colors duration-300">
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Back to Products
+                </GatsbyLink>
+                <div className="flex flex-col lg:flex-row gap-8">
+                    <div className="flex-1 relative group">
+                        <img src={product.thumbnail_url} alt={product.name} className="w-full h-auto object-cover rounded-lg shadow-lg" />
+                        <div className="absolute inset-0 bg-matrix-bg bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span className="text-matrix-glow text-2xl font-bold glitch" data-text={product.name}>{product.name}</span>
+                        </div>
+                    </div>
+                    <div className="flex-1 flex flex-col space-y-6">
+                        <h1 className="text-4xl font-bold glitch" data-text={product.name}>{product.name}</h1>
+                        <div className="flex flex-wrap items-center gap-4">
+                            <span className="px-3 py-1 text-lg font-semibold text-matrix-glow bg-matrix-accent bg-opacity-20 rounded-lg animate-pulse">
                                 {product.retail_price} {product.currency}
-                            </Badge>
-                            <Badge colorScheme={colorMode === "dark" ? "blue" : "purple"} fontSize="md">
+                            </span>
+                            <span className="px-3 py-1 text-lg font-semibold text-matrix-highlight bg-matrix-accent bg-opacity-20 rounded-lg">
                                 {product.variants} variants
-                            </Badge>
-                        </HStack>
-                        {product.description && (
-                            <Text fontSize="lg" color={textColor}>{product.description}</Text>
-                        )}
-                        <Divider borderColor={borderColor} />
-                        <HStack spacing={4}>
-                            <NumberInput
-                                defaultValue={1}
-                                min={1}
-                                max={10}
-                                onChange={(_, value) => setQuantity(value)}
-                                bg={cardBgColor}
-                                borderColor={borderColor}
-                            >
-                                <NumberInputField color={textColor} />
-                                <NumberInputStepper>
-                                    <NumberIncrementStepper />
-                                    <NumberDecrementStepper />
-                                </NumberInputStepper>
-                            </NumberInput>
-                            <Button
+                            </span>
+                        </div>
+                        <p className="text-lg leading-relaxed">{product.description}</p>
+                        <hr className="border-matrix-accent opacity-50" />
+                        <div className="flex flex-col sm:flex-row items-center gap-4">
+                            <div className="relative">
+                                <input
+                                    type="number"
+                                    value={quantity}
+                                    onChange={(e) => setQuantity(Math.max(1, Math.min(10, Number(e.target.value))))}
+                                    min="1"
+                                    max="10"
+                                    className="matrix-input w-20 pr-8"
+                                />
+                                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col">
+                                    <button onClick={() => setQuantity(q => Math.min(q + 1, 10))} className="text-matrix-accent hover:text-matrix-glow">▲</button>
+                                    <button onClick={() => setQuantity(q => Math.max(q - 1, 1))} className="text-matrix-accent hover:text-matrix-glow">▼</button>
+                                </div>
+                            </div>
+                            <button
                                 onClick={handleAddToCart}
-                                colorScheme={colorMode === "dark" ? "blue" : "brand"}
-                                leftIcon={<StarIcon />}
+                                className="matrix-button w-full sm:w-auto animate-float"
                             >
                                 Add to Cart
-                            </Button>
-                        </HStack>
-                    </VStack>
-                </Flex>
-            </Container>
-        </Box>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 };
 
