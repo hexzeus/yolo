@@ -4,7 +4,7 @@ const config: GatsbyConfig = {
   siteMetadata: {
     title: `My Gatsby Printful Store`,
     description: `An e-commerce store using Gatsby and Printful`,
-    author: `@yourusername`,
+    author: `@yourusername`, // Ensure this field is correctly defined
     siteUrl: `https://yoursiteurlhere.com`,
   },
   graphqlTypegen: true,
@@ -32,12 +32,11 @@ const config: GatsbyConfig = {
       },
     },
     `gatsby-plugin-netlify`,
-    `gatsby-plugin-sass`,  // Add this line for Sass
     {
       resolve: `gatsby-plugin-google-fonts`,
       options: {
         fonts: [
-          `orbitron\:400,700`, // You can specify different font weights here
+          `orbitron\:400,700`, // Orbitron font
         ],
         display: 'swap',
       },
