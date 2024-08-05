@@ -7,10 +7,21 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-const renderUrl = 'https://yolo-8yva.onrender.com';
+const allowedOrigins = [
+    'http://localhost:8000',  // Gatsby development server
+    'https://yolo-8yva.onrender.com'  // Your production URL
+];
 
 app.use(cors({
-    origin: renderUrl
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, curl, etc.)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    }
 }));
 
 // Set Content Security Policy
@@ -19,11 +30,11 @@ app.use(helmet({
         useDefaults: true,
         directives: {
             "default-src": ["'self'"],
-            "script-src": ["'self'", "'unsafe-inline'", renderUrl],
+            "script-src": ["'self'", "'unsafe-inline'", 'https://yolo-8yva.onrender.com'],
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-            "img-src": ["'self'", "data:", renderUrl],
+            "img-src": ["'self'", "data:", 'https://yolo-8yva.onrender.com'],
             "font-src": ["'self'", "https://fonts.gstatic.com"],
-            "connect-src": ["'self'", "https://api.printful.com", renderUrl],
+            "connect-src": ["'self'", "https://api.printful.com", 'https://yolo-8yva.onrender.com'],
             "object-src": ["'none'"],
             "upgrade-insecure-requests": []
         }
