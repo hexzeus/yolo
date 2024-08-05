@@ -52,7 +52,7 @@ const IndexPage = () => {
   const fetchProducts = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get('https://yolo-8yva.onrender.com//api/products', { timeout: 5000 });
+      const response = await axios.get('https://yolo-8yva.onrender.com/api/products', { timeout: 5000 });
       if (response.data && Array.isArray(response.data.result)) {
         setProducts(response.data.result);
       } else {
