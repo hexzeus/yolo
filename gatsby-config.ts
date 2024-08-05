@@ -32,6 +32,13 @@ const config: GatsbyConfig = {
       },
     },
     `gatsby-plugin-netlify`,
+    {
+      resolve: "@chakra-ui/gatsby-plugin",
+      options: {
+        resetCSS: true,
+        isUsingColorMode: true,
+      },
+    },
   ],
 }
 

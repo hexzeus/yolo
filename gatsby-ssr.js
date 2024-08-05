@@ -1,12 +1,53 @@
-/**
- * Implement Gatsby's SSR (Server Side Rendering) APIs in this file.
- *
- * See: https://www.gatsbyjs.com/docs/reference/config-files/gatsby-ssr/
- */
+import React from "react"
+import { ChakraProvider, ColorModeScript } from "@chakra-ui/react"
+import theme from "./src/theme"
 
-/**
- * @type {import('gatsby').GatsbySSR['onRenderBody']}
- */
-exports.onRenderBody = ({ setHtmlAttributes }) => {
+export const onRenderBody = ({ setHtmlAttributes, setHeadComponents }) => {
   setHtmlAttributes({ lang: `en` })
+  setHeadComponents([
+    <ColorModeScript
+      initialColorMode={theme.config.initialColorMode}
+      key="chakra-ui-no-flash"
+    />,
+  ])
+}
+
+export const wrapPageElement = ({ element }) => (
+  <ChakraProvider theme={theme}>
+    {element}
+  </ChakraProvider>
+)
+
+// Optional: Add this if you want to preload fonts
+export const onPreRenderHTML = ({ getHeadComponents, replaceHeadComponents }) => {
+  const headComponents = getHeadComponents()
+  const filteredHeadComponents = headComponents.filter(
+    ({ type, props }) =>
+      !(
+        type === 'link' &&
+        props.as === 'font' &&
+        props.rel === 'preload'
+      )
+  )
+
+  const fontPreloadLinks = [
+    <link
+      key="preload-inter"
+      rel="preload"
+      href="/fonts/inter-var-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossOrigin="anonymous"
+    />,
+    <link
+      key="preload-poppins"
+      rel="preload"
+      href="/fonts/poppins-var-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossOrigin="anonymous"
+    />,
+  ]
+
+  replaceHeadComponents([...filteredHeadComponents, ...fontPreloadLinks])
 }
