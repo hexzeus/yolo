@@ -47,15 +47,15 @@
   ],
   "license": "0BSD",
   "scripts": {
+    "clean": "rm -rf .cache public",
     "build": "npx gatsby build",
     "develop": "gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,css}\"",
     "start": "node server.js",
     "serve": "gatsby serve",
-    "clean": "gatsby clean",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
     "netlify:dev": "netlify dev",
-    "deploy": "npx gatsby build --prefix-paths && gh-pages -d public",
+    "deploy": "npm run clean && npx gatsby build --prefix-paths && gh-pages -d public",
     "type-check": "tsc --noEmit",
     "dev": "nodemon server.js"
   },
