@@ -40,14 +40,15 @@
     "prettier": "^3.2.4",
     "typescript": "^5.3.3",
     "nodemon": "^2.0.7",
-    "gatsby-cli": "^5.13.0"
+    "gatsby-cli": "^5.13.0",
+    "rimraf": "^5.0.1"
   },
   "keywords": [
     "gatsby"
   ],
   "license": "0BSD",
   "scripts": {
-    "clean": "rm -rf .cache public",
+    "clean": "rimraf .cache public",
     "build": "npx gatsby build",
     "develop": "gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,css}\"",
