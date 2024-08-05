@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const helmet = require('helmet');
 require('dotenv').config();
 
 const app = express();
@@ -9,7 +10,30 @@ const port = process.env.PORT || 3000;
 app.use(cors({
     origin: 'http://localhost:8000' // Gatsby's default development port
 }));
+
+// Set Content Security Policy
+app.use(helmet({
+    contentSecurityPolicy: {
+        useDefaults: true,
+        directives: {
+            "default-src": ["'self'"],
+            "script-src": ["'self'", "'unsafe-inline'", "http://localhost:3000"],
+            "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            "img-src": ["'self'", "data:", "http://localhost:3000"],
+            "font-src": ["'self'", "https://fonts.gstatic.com"],
+            "connect-src": ["'self'", "https://api.printful.com"],
+            "object-src": ["'none'"],
+            "upgrade-insecure-requests": []
+        }
+    }
+}));
+
 app.use(express.json());
+
+// Route for the root path
+app.get('/', (req, res) => {
+    res.send('<h1>Welcome to the Express Server</h1>');
+});
 
 // Fetch products from Printful
 app.get('/api/products', async (req, res) => {
