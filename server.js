@@ -9,7 +9,8 @@ const port = process.env.PORT || 3000;
 
 const allowedOrigins = [
     'http://localhost:8000',  // Gatsby development server
-    'https://yolo-8yva.onrender.com'  // Your production URL
+    'https://yolo-8yva.onrender.com',  // Your Render production URL
+    'https://yoloprint.netlify.app'  // Your Netlify URL
 ];
 
 app.use(cors({
@@ -29,12 +30,12 @@ app.use(helmet({
     contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-            "default-src": ["'self'", 'https://yolo-8yva.onrender.com'],
-            "script-src": ["'self'", "'unsafe-inline'", 'https://yolo-8yva.onrender.com'],
+            "default-src": ["'self'", 'https://yolo-8yva.onrender.com', 'https://yoloprint.netlify.app'],
+            "script-src": ["'self'", "'unsafe-inline'", 'https://yolo-8yva.onrender.com', 'https://yoloprint.netlify.app'],
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-            "img-src": ["'self'", "data:", 'https://yolo-8yva.onrender.com'],
+            "img-src": ["'self'", "data:", 'https://yolo-8yva.onrender.com', 'https://yoloprint.netlify.app'],
             "font-src": ["'self'", "https://fonts.gstatic.com"],
-            "connect-src": ["'self'", "https://api.printful.com", 'https://yolo-8yva.onrender.com'],
+            "connect-src": ["'self'", "https://api.printful.com", 'https://yolo-8yva.onrender.com', 'https://yoloprint.netlify.app'],
             "object-src": ["'none'"],
             "upgrade-insecure-requests": []
         }

@@ -18,3 +18,4 @@ const fetchProducts = async () => {
 };
 
 fetchProducts();
+
