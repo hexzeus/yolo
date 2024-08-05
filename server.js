@@ -7,7 +7,7 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-const renderUrl = 'https://yolo-8yva.onrender.com/';
+const renderUrl = 'https://yolo-8yva.onrender.com';
 
 app.use(cors({
     origin: renderUrl
