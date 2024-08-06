@@ -1,20 +1,30 @@
-import React, { useEffect, useState, useCallback } from "react";
+// src/pages/index.tsx
+
+import React, { useState, useCallback, useEffect } from "react";
 import { Link as GatsbyLink } from "gatsby";
 import axios from "axios";
 
-interface Variant {
+interface Product {
   id: string;
+  external_id: string;
   name: string;
-  retail_price: string;
+  thumbnail_url: string;
+  price: string;
   currency: string;
 }
 
-interface Product {
-  id: string;
-  name: string;
-  thumbnail_url: string;
-  variants: Variant[];
-}
+// This array controls the order and featured status of your products
+const productOrder = [
+  { external_id: "66ad62c7175516", featured: true },
+  { external_id: "66ab58732e1a68", featured: true },
+  { external_id: "66ab445dc87f59", featured: true },
+  { external_id: "66ab41f63432e2", featured: false },
+  { external_id: "66ab3b27a50186", featured: false },
+  { external_id: "66ab3a9d415f62", featured: false },
+  { external_id: "66ab33a5b09cb4", featured: false },
+  { external_id: "66ab221785b4b3", featured: false },
+  // Add more products as needed
+];
 
 const IndexPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -29,8 +39,13 @@ const IndexPage: React.FC = () => {
       setError(null);
       const response = await axios.get('https://yolo-8yva.onrender.com/api/products', { timeout: 5000 });
       if (response.data && Array.isArray(response.data.result)) {
-        setProducts(response.data.result);
-        setFeaturedProducts(response.data.result.slice(0, 3));
+        const orderedProducts = productOrder.map(orderItem => {
+          const product = response.data.result.find((p: Product) => p.external_id === orderItem.external_id);
+          return product ? { ...product, featured: orderItem.featured } : null;
+        }).filter(Boolean);
+
+        setProducts(orderedProducts);
+        setFeaturedProducts(orderedProducts.filter(product => product.featured));
       } else {
         throw new Error("Unexpected response format");
       }
@@ -88,7 +103,7 @@ const IndexPage: React.FC = () => {
           <h2 className="text-2xl font-bold mb-4 glitch" data-text="Featured Products">Featured Products</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredProducts.map((product) => (
-              <FeaturedProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} featured={true} />
             ))}
           </div>
         </section>
@@ -100,7 +115,7 @@ const IndexPage: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} featured={false} />
               ))}
             </div>
           )}
@@ -110,48 +125,27 @@ const IndexPage: React.FC = () => {
   );
 };
 
-const FeaturedProductCard: React.FC<{ product: Product }> = ({ product }) => (
-  <GatsbyLink
-    to={`/product/${product.id}`}
-    state={{ product }}
-    className="block group"
-  >
-    <div className="relative overflow-hidden rounded-lg shadow-lg bg-matrix-bg border-2 border-matrix-accent transform transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl group-hover:shadow-matrix-glow">
-      <img src={product.thumbnail_url} alt={product.name} className="w-full h-64 object-cover" />
-      <div className="absolute inset-0 bg-matrix-bg bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <span className="text-matrix-glow text-lg font-bold animate-pulse">View Details</span>
-      </div>
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-matrix-text mb-2 glitch" data-text={product.name}>{product.name}</h3>
-        <div className="font-bold text-matrix-accent mb-2">
-          From: {product.variants[0]?.retail_price} {product.variants[0]?.currency}
+const ProductCard: React.FC<{ product: Product; featured: boolean }> = ({ product, featured }) => {
+  return (
+    <GatsbyLink
+      to={`/product/${product.id}`}
+      state={{ product }}
+      className="block group"
+    >
+      <div className={`relative overflow-hidden rounded-lg shadow-md bg-matrix-bg border ${featured ? 'border-2 border-matrix-accent' : 'border-matrix-accent'} transform transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-matrix-glow`}>
+        <img src={product.thumbnail_url} alt={product.name} className={`w-full object-cover ${featured ? 'h-64' : 'h-48'}`} />
+        <div className="absolute inset-0 bg-matrix-bg bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span className="text-matrix-glow text-lg font-bold animate-pulse">View Details</span>
         </div>
-        <div className="text-matrix-highlight">{product.variants.length} variants</div>
-      </div>
-    </div>
-  </GatsbyLink>
-);
-
-const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
-  <GatsbyLink
-    to={`/product/${product.id}`}
-    state={{ product }}
-    className="block group"
-  >
-    <div className="relative overflow-hidden rounded-lg shadow-md bg-matrix-bg border border-matrix-accent transform transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-matrix-glow">
-      <img src={product.thumbnail_url} alt={product.name} className="w-full h-48 object-cover" />
-      <div className="absolute inset-0 bg-matrix-bg bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <span className="text-matrix-glow text-lg font-bold animate-pulse">View Details</span>
-      </div>
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-matrix-text mb-2 truncate">{product.name}</h3>
-        <div className="font-bold text-matrix-accent mb-2">
-          From: {product.variants[0]?.retail_price} {product.variants[0]?.currency}
+        <div className="p-4">
+          <h3 className={`text-lg font-semibold text-matrix-text mb-2 ${featured ? 'glitch' : 'truncate'}`} data-text={product.name}>{product.name}</h3>
+          <div className="font-bold text-matrix-accent mb-2">
+            Price: {product.price} {product.currency}
+          </div>
         </div>
-        <div className="text-matrix-highlight">{product.variants.length} variants</div>
       </div>
-    </div>
-  </GatsbyLink>
-);
+    </GatsbyLink>
+  );
+};
 
 export default IndexPage;
