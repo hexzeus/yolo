@@ -54,7 +54,7 @@ const IndexPage: React.FC = () => {
           return product ? { ...product, featured: orderItem.featured } : null;
         }).filter(Boolean);
 
-        setProducts(orderedProducts as Product[]);
+        setProducts(orderedProducts);
         setFeaturedProducts(orderedProducts.filter(product => product.featured));
       } else {
         throw new Error("Unexpected response format");
