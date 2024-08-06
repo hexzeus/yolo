@@ -1,16 +1,20 @@
-// src/pages/index.tsx
-
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link as GatsbyLink } from "gatsby";
 import axios from "axios";
+
+interface Variant {
+  id: string;
+  name: string;
+  retail_price: string;
+  currency: string;
+}
 
 interface Product {
   id: string;
   external_id: string;
   name: string;
   thumbnail_url: string;
-  price: string;
-  currency: string;
+  variants: Variant[];
 }
 
 // This array controls the order and featured status of your products
@@ -126,6 +130,8 @@ const IndexPage: React.FC = () => {
 };
 
 const ProductCard: React.FC<{ product: Product; featured: boolean }> = ({ product, featured }) => {
+  const mainVariant = product.variants[0];
+
   return (
     <GatsbyLink
       to={`/product/${product.id}`}
@@ -139,9 +145,12 @@ const ProductCard: React.FC<{ product: Product; featured: boolean }> = ({ produc
         </div>
         <div className="p-4">
           <h3 className={`text-lg font-semibold text-matrix-text mb-2 ${featured ? 'glitch' : 'truncate'}`} data-text={product.name}>{product.name}</h3>
-          <div className="font-bold text-matrix-accent mb-2">
-            Price: {product.price} {product.currency}
-          </div>
+          {mainVariant && (
+            <div className="font-bold text-matrix-accent mb-2">
+              Price: {mainVariant.retail_price} {mainVariant.currency}
+            </div>
+          )}
+          <div className="text-matrix-highlight">{product.variants.length} variants</div>
         </div>
       </div>
     </GatsbyLink>

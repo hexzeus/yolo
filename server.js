@@ -9,7 +9,6 @@ const port = process.env.PORT || 3000;
 
 const allowedOrigins = [
     'http://localhost:8000',  // Gatsby development server
-    'http://localhost:3000',  // Localhost for Next.js development
     'https://yolo-8yva.onrender.com',  // Your Render production URL
     'https://ivespro.netlify.app'  // Your Netlify URL
 ];
@@ -31,12 +30,12 @@ app.use(helmet({
     contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-            "default-src": ["'self'", 'https://yolo-8yva.onrender.com', 'https://ivespro.netlify.app'],
-            "script-src": ["'self'", "'unsafe-inline'", 'https://yolo-8yva.onrender.com', 'https://ivespro.netlify.app'],
+            "default-src": ["'self'", 'https://yolo-8yva.onrender.com', 'https://ivespro.netlify.app/'],
+            "script-src": ["'self'", "'unsafe-inline'", 'https://yolo-8yva.onrender.com', 'https://ivespro.netlify.app/'],
             "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-            "img-src": ["'self'", "data:", 'https://yolo-8yva.onrender.com', 'https://ivespro.netlify.app'],
+            "img-src": ["'self'", "data:", 'https://yolo-8yva.onrender.com', 'https://ivespro.netlify.app/'],
             "font-src": ["'self'", "https://fonts.gstatic.com"],
-            "connect-src": ["'self'", "https://api.printful.com", 'https://yolo-8yva.onrender.com', 'https://ivespro.netlify.app'],
+            "connect-src": ["'self'", "https://api.printful.com", 'https://yolo-8yva.onrender.com', 'https://ivespro.netlify.app/'],
             "object-src": ["'none'"],
             "upgrade-insecure-requests": []
         }
@@ -54,34 +53,21 @@ app.get('/', (req, res) => {
 app.get('/api/products', async (req, res) => {
     try {
         console.log('Fetching products from Printful...');
-        const apiKey = process.env.PRINTFUL_API_KEY;
-        const storeId = process.env.PRINTFUL_STORE_ID;
-        console.log('API Key:', apiKey ? 'Set' : 'Not Set');
-        console.log('Store ID:', storeId ? 'Set' : 'Not Set');
+        console.log('API Key:', process.env.PRINTFUL_API_KEY ? 'Set' : 'Not Set');
+        console.log('Store ID:', process.env.PRINTFUL_STORE_ID ? 'Set' : 'Not Set');
 
-        if (!apiKey || !storeId) {
+        if (!process.env.PRINTFUL_API_KEY || !process.env.PRINTFUL_STORE_ID) {
             throw new Error('Printful API key or Store ID is not set');
         }
 
-        const url = `https://api.printful.com/store/products?store_id=${storeId}`;
-        const headers = {
-            'Authorization': `Bearer ${apiKey}`
-        };
-        console.log('Request URL:', url);
-        console.log('Request Headers:', headers);
+        const response = await axios.get(`https://api.printful.com/store/products?store_id=${process.env.PRINTFUL_STORE_ID}`, {
+            headers: {
+                'Authorization': `Bearer ${process.env.PRINTFUL_API_KEY}`
+            }
+        });
 
-        const response = await axios.get(url, { headers });
-
-        const formattedProducts = response.data.result.map(product => ({
-            id: product.id,
-            external_id: product.external_id,
-            name: product.name,
-            thumbnail_url: product.thumbnail_url,
-            price: product.sync_variants[0].retail_price,  // Use the first variant's price as the product price
-            currency: product.sync_variants[0].currency  // Use the first variant's currency
-        }));
-
-        res.json({ result: formattedProducts });
+        console.log('Printful response:', JSON.stringify(response.data, null, 2));
+        res.json(response.data);
     } catch (error) {
         console.error('Error fetching products:', error.response ? JSON.stringify(error.response.data, null, 2) : error.message);
         res.status(500).json({
