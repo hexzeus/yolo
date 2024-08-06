@@ -13,12 +13,18 @@ interface Product {
   id: string;
   external_id: string;
   name: string;
+  description: string;
   thumbnail_url: string;
   variants: Variant[];
 }
 
+interface ProductOrder {
+  external_id: string;
+  featured: boolean;
+}
+
 // This array controls the order and featured status of your products
-const productOrder = [
+const productOrder: ProductOrder[] = [
   { external_id: "66ad62c7175516", featured: true },
   { external_id: "66ab58732e1a68", featured: true },
   { external_id: "66ab445dc87f59", featured: true },
@@ -48,7 +54,7 @@ const IndexPage: React.FC = () => {
           return product ? { ...product, featured: orderItem.featured } : null;
         }).filter(Boolean);
 
-        setProducts(orderedProducts);
+        setProducts(orderedProducts as Product[]);
         setFeaturedProducts(orderedProducts.filter(product => product.featured));
       } else {
         throw new Error("Unexpected response format");
@@ -145,6 +151,7 @@ const ProductCard: React.FC<{ product: Product; featured: boolean }> = ({ produc
         </div>
         <div className="p-4">
           <h3 className={`text-lg font-semibold text-matrix-text mb-2 ${featured ? 'glitch' : 'truncate'}`} data-text={product.name}>{product.name}</h3>
+          <p className="text-matrix-highlight mb-2">{product.description}</p>
           {mainVariant && (
             <div className="font-bold text-matrix-accent mb-2">
               Price: {mainVariant.retail_price} {mainVariant.currency}
